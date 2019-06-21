@@ -446,6 +446,13 @@
     <ClInclude Include="..\..\common\LockChannel.h" />
     <ClInclude Include="LWireSpecials.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\doc\BonDriver_T230C-sample.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\doc\History-LWire.txt" />
+    <Text Include="..\..\doc\Readme-LWire.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

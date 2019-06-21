@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="doc">
+      <UniqueIdentifier>{716660db-6a17-4648-96c2-0ffe6ec0ada9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\common\CIniFileAccess.cpp">
@@ -50,5 +53,18 @@
     <ClInclude Include="LWireSpecials.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\doc\BonDriver_T230C-sample.ini">
+      <Filter>doc</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\doc\History-LWire.txt">
+      <Filter>doc</Filter>
+    </Text>
+    <Text Include="..\..\doc\Readme-LWire.txt">
+      <Filter>doc</Filter>
+    </Text>
   </ItemGroup>
 </Project>
