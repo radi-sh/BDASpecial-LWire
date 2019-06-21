@@ -1,0 +1,9 @@
+Cypress USBインターフェースチューナー用BDASpecialプラグイン
+
+【これは何？】
+MyGica T230C用に作成したBonDriver_BDA用BDASpecialプラグインです。
+今のところT230C専用です。
+T230CのWindows BDA Driverには不具合があって、DVB-Cモードのチューニング時に必要な情報である、Symbol RateをDemodulatorであるSi2141-A10に書込んでいません。
+上記不具合に対処するために作成したものです。
+BonDriver_BDA.dllと組み合わせて使用します。
+
