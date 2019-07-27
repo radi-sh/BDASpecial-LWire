@@ -222,7 +222,7 @@ static const HRESULT send_i2c(IKsControl* pControlCaptureFilter, i2c_cmd* i2c)
 	return hr;
 }
 
-class CLWireSpecials : public IBdaSpecials2b3
+class CLWireSpecials : public IBdaSpecials2b4
 {
 public:
 	CLWireSpecials(HMODULE hMySelf, CComPtr<IBaseFilter> pTunerDevice, CComPtr<IBaseFilter> pCaptureDevice);

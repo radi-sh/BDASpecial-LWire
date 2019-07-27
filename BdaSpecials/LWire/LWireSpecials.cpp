@@ -101,7 +101,7 @@ __declspec(dllexport) IBdaSpecials * CreateBdaSpecials(CComPtr<IBaseFilter> pTun
 	return NULL;
 }
 
-__declspec(dllexport) IBdaSpecials* CreateBdaSpecials2(CComPtr<IBaseFilter> pTunerDevice, CComPtr<IBaseFilter> pCaptureDevice)
+__declspec(dllexport) IBdaSpecials* CreateBdaSpecials2(CComPtr<IBaseFilter> pTunerDevice, CComPtr<IBaseFilter> pCaptureDevice, const WCHAR* szTunerDisplayName, const WCHAR* szTunerFriendlyName, const WCHAR* szCaptureDisplayName, const WCHAR* szCaptureFriendlyName)
 {
 	return new CLWireSpecials(hMySelf, pTunerDevice, pCaptureDevice);
 }
