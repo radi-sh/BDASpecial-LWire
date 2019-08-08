@@ -325,64 +325,6 @@ const HRESULT CLWireSpecials::InitializeHook(void)
 	return S_OK;
 }
 
-const HRESULT CLWireSpecials::Set22KHz(bool bActive)
-{
-	return E_NOINTERFACE;
-}
-
-const HRESULT CLWireSpecials::Set22KHz(long nTone)
-{
-	return E_NOINTERFACE;
-}
-
-const HRESULT CLWireSpecials::FinalizeHook(void)
-{
-	return S_OK;
-}
-
-const HRESULT CLWireSpecials::GetSignalState(int *pnStrength, int *pnQuality, int *pnLock)
-{
-	return E_NOINTERFACE;
-}
-
-const HRESULT CLWireSpecials::LockChannel(BYTE bySatellite, BOOL bHorizontal, unsigned long ulFrequency, BOOL bDvbS2)
-{
-	return E_NOINTERFACE;
-}
-
-const HRESULT CLWireSpecials::LockChannel(const TuningParam *pTuningParam)
-{
-	return E_NOINTERFACE;
-}
-
-const HRESULT CLWireSpecials::SetLNBPower(bool bActive)
-{
-	return E_NOINTERFACE;
-}
-
-const HRESULT CLWireSpecials::ReadIniFile(const WCHAR *szIniFilePath)
-{
-	return S_OK;
-}
-
-const HRESULT CLWireSpecials::IsDecodingNeeded(BOOL *pbAns)
-{
-	if (pbAns)
-		*pbAns = FALSE;
-
-	return S_OK;
-}
-
-const HRESULT CLWireSpecials::Decode(BYTE *pBuf, DWORD dwSize)
-{
-	return E_NOINTERFACE;
-}
-
-const HRESULT CLWireSpecials::GetSignalStrength(float *fVal)
-{
-	return E_NOINTERFACE;
-}
-
 const HRESULT CLWireSpecials::PreLockChannel(TuningParam *pTuningParam)
 {
 	static long sr_cache = -1;
@@ -439,21 +381,6 @@ const HRESULT CLWireSpecials::PreLockChannel(TuningParam *pTuningParam)
 
 	OutputDebug(L"PreLockChannel: Complete.\n");
 
-	return S_OK;
-}
-
-const HRESULT CLWireSpecials::PreTuneRequest(const TuningParam *pTuningParam, ITuneRequest *pITuneRequest)
-{
-	return S_OK;
-}
-
-const HRESULT CLWireSpecials::PostTuneRequest(const TuningParam * pTuningParam)
-{
-	return S_OK;
-}
-
-const HRESULT CLWireSpecials::PostLockChannel(const TuningParam *pTuningParam)
-{
 	return S_OK;
 }
 
