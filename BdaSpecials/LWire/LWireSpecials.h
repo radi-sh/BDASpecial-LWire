@@ -225,7 +225,7 @@ static const HRESULT send_i2c(IKsControl* pControlCaptureFilter, i2c_cmd* i2c)
 class CLWireSpecials : public IBdaSpecials2b5
 {
 public:
-	CLWireSpecials(HMODULE hMySelf, CComPtr<IBaseFilter> pTunerDevice, CComPtr<IBaseFilter> pCaptureDevice);
+	CLWireSpecials(CComPtr<IBaseFilter> pTunerDevice, CComPtr<IBaseFilter> pCaptureDevice);
 	virtual ~CLWireSpecials(void);
 
 	const HRESULT InitializeHook(void);
@@ -234,8 +234,9 @@ public:
 
 	virtual void Release(void);
 
+	static HMODULE m_hMySelf;
+
 private:
-	HMODULE m_hMySelf;
 /*
 	CComPtr<IKsControl> m_pControlTunerFilter;							// Tuner ‚Ì IKsControl
 	CComPtr<IKsControl> m_pControlTunerInputPin;						// Tuner Input Pin ‚Ì IKsControl

@@ -75,7 +75,7 @@ static void CheckMethod(GUID set, ULONG nodeID, IKsControl * pControl)
 
 FILE *g_fpLog = NULL;
 
-HMODULE hMySelf;
+HMODULE CLWireSpecials::m_hMySelf = NULL;
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 {
@@ -85,7 +85,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 		::_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 		// モジュールハンドル保存
-		hMySelf = hModule;
+		CLWireSpecials::m_hMySelf = hModule;
 		break;
 
 	case DLL_PROCESS_DETACH:
@@ -103,7 +103,7 @@ __declspec(dllexport) IBdaSpecials * CreateBdaSpecials(CComPtr<IBaseFilter> pTun
 
 __declspec(dllexport) IBdaSpecials* CreateBdaSpecials2(CComPtr<IBaseFilter> pTunerDevice, CComPtr<IBaseFilter> pCaptureDevice, const WCHAR* szTunerDisplayName, const WCHAR* szTunerFriendlyName, const WCHAR* szCaptureDisplayName, const WCHAR* szCaptureFriendlyName)
 {
-	return new CLWireSpecials(hMySelf, pTunerDevice, pCaptureDevice);
+	return new CLWireSpecials(pTunerDevice, pCaptureDevice);
 }
 
 __declspec(dllexport) HRESULT CheckAndInitTuner(IBaseFilter *pTunerDevice, const WCHAR *szDisplayName, const WCHAR *szFriendlyName, const WCHAR *szIniFilePath)
@@ -113,15 +113,14 @@ __declspec(dllexport) HRESULT CheckAndInitTuner(IBaseFilter *pTunerDevice, const
 	// DebugLogを記録するかどうか
 	if (IniFileAccess.ReadKeyB(L"LWire", L"DebugLog", FALSE)) {
 		// DebugLogのファイル名取得
-		SetDebugLog(common::GetModuleName(hMySelf) + L"log");
+		SetDebugLog(common::GetModuleName(CLWireSpecials::m_hMySelf) + L"log");
 	}
 
 	return S_OK;
 }
 
-CLWireSpecials::CLWireSpecials(HMODULE hMySelf, CComPtr<IBaseFilter> pTunerDevice, CComPtr<IBaseFilter> pCaptureDevice)
-	: m_hMySelf(hMySelf),
-	  m_pTunerDevice(pTunerDevice),
+CLWireSpecials::CLWireSpecials(CComPtr<IBaseFilter> pTunerDevice, CComPtr<IBaseFilter> pCaptureDevice)
+	: m_pTunerDevice(pTunerDevice),
 	  m_pCaptureDevice(pCaptureDevice)
 {
 	::InitializeCriticalSection(&m_CriticalSection);
@@ -131,8 +130,6 @@ CLWireSpecials::CLWireSpecials(HMODULE hMySelf, CComPtr<IBaseFilter> pTunerDevic
 
 CLWireSpecials::~CLWireSpecials()
 {
-	m_hMySelf = NULL;
-
 	::DeleteCriticalSection(&m_CriticalSection);
 
 	return;
