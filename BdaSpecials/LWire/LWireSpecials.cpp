@@ -15,7 +15,7 @@
 #include "CIniFileAccess.h"
 #include "DSFilterEnum.h"
 
-static void CheckProperty(GUID set, ULONG nodeID, IKsControl * pControl)
+static void CheckProperty(GUID set, ULONG nodeID, IKsControl* pControl)
 {
 	HRESULT hr;
 
@@ -44,7 +44,7 @@ static void CheckProperty(GUID set, ULONG nodeID, IKsControl * pControl)
 	}
 }
 
-static void CheckMethod(GUID set, ULONG nodeID, IKsControl * pControl)
+static void CheckMethod(GUID set, ULONG nodeID, IKsControl* pControl)
 {
 	HRESULT hr;
 
@@ -77,7 +77,7 @@ FILE *g_fpLog = NULL;
 
 HMODULE CLWireSpecials::m_hMySelf = NULL;
 
-BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID /*lpReserved*/)
 {
 	switch (ul_reason_for_call) {
 	case DLL_PROCESS_ATTACH:
@@ -96,17 +96,17 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 	return TRUE;
 }
 
-__declspec(dllexport) IBdaSpecials * CreateBdaSpecials(CComPtr<IBaseFilter> pTunerDevice)
+__declspec(dllexport) IBdaSpecials* CreateBdaSpecials(CComPtr<IBaseFilter> pTunerDevice)
 {
 	return NULL;
 }
 
-__declspec(dllexport) IBdaSpecials* CreateBdaSpecials2(CComPtr<IBaseFilter> pTunerDevice, CComPtr<IBaseFilter> pCaptureDevice, const WCHAR* szTunerDisplayName, const WCHAR* szTunerFriendlyName, const WCHAR* szCaptureDisplayName, const WCHAR* szCaptureFriendlyName)
+__declspec(dllexport) IBdaSpecials* CreateBdaSpecials2(CComPtr<IBaseFilter> pTunerDevice, CComPtr<IBaseFilter> pCaptureDevice, const WCHAR* /*szTunerDisplayName*/, const WCHAR* /*szTunerFriendlyName*/, const WCHAR* /*szCaptureDisplayName*/, const WCHAR* /*szCaptureFriendlyName*/)
 {
 	return new CLWireSpecials(pTunerDevice, pCaptureDevice);
 }
 
-__declspec(dllexport) HRESULT CheckAndInitTuner(IBaseFilter *pTunerDevice, const WCHAR *szDisplayName, const WCHAR *szFriendlyName, const WCHAR *szIniFilePath)
+__declspec(dllexport) HRESULT CheckAndInitTuner(IBaseFilter* /*pTunerDevice*/, const WCHAR* /*szDisplayName*/, const WCHAR* /*szFriendlyName*/, const WCHAR* szIniFilePath)
 {
 	CIniFileAccess IniFileAccess(szIniFilePath);
 
@@ -322,7 +322,7 @@ const HRESULT CLWireSpecials::InitializeHook(void)
 	return S_OK;
 }
 
-const HRESULT CLWireSpecials::PreLockChannel(TuningParam *pTuningParam)
+const HRESULT CLWireSpecials::PreLockChannel(TuningParam* pTuningParam)
 {
 	static long sr_cache = -1;
 
