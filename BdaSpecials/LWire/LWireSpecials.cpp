@@ -141,7 +141,7 @@ const HRESULT CLWireSpecials::InitializeHook(void)
 		return E_POINTER;
 	}
 
-	/*
+#if 0
 	HRESULT hr;
 
 	// Tuner の IKsControl
@@ -187,7 +187,7 @@ const HRESULT CLWireSpecials::InitializeHook(void)
 		OutputDebug(L"Fail to get IKsControl of tuner output pin.\n");
 		return E_NOINTERFACE;
 	}
-*/
+#endif
 
 	// Capture の IKsControl
 	{
@@ -199,7 +199,7 @@ const HRESULT CLWireSpecials::InitializeHook(void)
 		m_pControlCaptureFilter = pControlCaptureFilter;
 	}
 
-/*
+#if 0
 	// IBDA_DeviceControl
 	{
 		CComQIPtr<IBDA_DeviceControl> pDeviceControl(m_pTunerDevice);
@@ -272,9 +272,9 @@ const HRESULT CLWireSpecials::InitializeHook(void)
 			}
 		}
 	}
-*/
+#endif
 
-/*
+#if 0
 	OutputDebug(L"Checking Tuner Filter\n");
 
 	// KSMETHODSETID_BdaChangeSync がサポートされているか
@@ -312,7 +312,7 @@ const HRESULT CLWireSpecials::InitializeHook(void)
 	// KSPROPSETID_BdaDigitalDemodulator がサポートされているか
 	OutputDebug(L"-> KSPROPSETID_BdaDigitalDemodulator:\n");
 	CheckProperty(KSPROPSETID_BdaDigitalDemodulator, KSNODEID_DEMODULATOR, m_pControlTunerOutputPin);
-*/
+#endif
 
 	OutputDebug(L"Checking Capture Filter\n");
 	// KSPROPSETID_LWireExtensionProperties がサポートされているか
@@ -334,7 +334,7 @@ const HRESULT CLWireSpecials::PreLockChannel(TuningParam* pTuningParam)
 
 	OutputDebug(L"PreLockChannel: Start.\n");
 
-/*
+#if 0
 	// Si2168 connect tuners i2c
 	{
 		i2c_cmd i2c = { I2C_ADDR_SI2168, 3, 0, { 0xc0, 0x0d, 0x01, }, {} };
@@ -345,13 +345,13 @@ const HRESULT CLWireSpecials::PreLockChannel(TuningParam* pTuningParam)
 		i2c_cmd i2c = { I2C_ADDR_SI2157, 3, 1, { 0xc0, 0x00, 0x0d, }, {} };
 		hr = send_i2c(m_pControlCaptureFilter, &i2c);
 	}
-*/
+#endif
 	// Si2168 Prop 0x1102
 	if (sr_cache != pTuningParam->Modulation.SymbolRate) {
 		i2c_cmd i2c = { I2C_ADDR_SI2168, 6, 4, { 0x14, 0x00, 0x02, 0x11, (BYTE)(pTuningParam->Modulation.SymbolRate & 0xff), (BYTE)((pTuningParam->Modulation.SymbolRate >> 8) & 0xff) }, {} };
 		hr = send_i2c(m_pControlCaptureFilter, &i2c);
 	}
-/*
+#if 0
 	// Si2168 Prop 0x011a
 	{
 		BYTE std;
@@ -374,7 +374,7 @@ const HRESULT CLWireSpecials::PreLockChannel(TuningParam* pTuningParam)
 		i2c_cmd i2c = { I2C_ADDR_SI2168, 3, 0, { 0xc0, 0x0d, 0x00, }, {} };
 		hr = send_i2c(m_pControlCaptureFilter, &i2c);
 	}
-*/
+#endif
 
 	OutputDebug(L"PreLockChannel: Complete.\n");
 

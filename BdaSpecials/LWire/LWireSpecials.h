@@ -237,13 +237,13 @@ public:
 	static HMODULE m_hMySelf;
 
 private:
-/*
+#if 0
 	CComPtr<IKsControl> m_pControlTunerFilter;							// Tuner ÇÃ IKsControl
 	CComPtr<IKsControl> m_pControlTunerInputPin;						// Tuner Input Pin ÇÃ IKsControl
 	CComPtr<IKsControl> m_pControlTunerOutputPin;						// Tuner Output Pin ÇÃ IKsControl
-*/
+#endif
 	CComPtr<IKsControl> m_pControlCaptureFilter;						// Capture ÇÃ IKsControl
-/*
+#if 0
 	CComPtr<IBDA_DeviceControl> m_pIBDA_DeviceControl;					// IBDA_DeviceControl (Tuner)
 	CComPtr<IBDA_LNBInfo> m_pIBDA_LNBInfo;								// IBDA_LNBInfo (Tuner Input Pin, Node 0)
 	CComPtr<IBDA_DigitalDemodulator> m_pIBDA_DigitalDemodulator;		// IBDA_DigitalDemodulator (Tuner Output Pin, Node 1)
@@ -251,7 +251,7 @@ private:
 	CComPtr<IBDA_DiseqCommand> m_pIBDA_DiseqCommand;					// IBDA_DiseqCommand (Tuner Input Pin, Node 0)
 	CComPtr<IBDA_SignalStatistics> m_pIBDA_SignalStatisticsTuner;		// Tuner Node ÇÃ IBDA_SignalStatistics(Tuner Input Pin, Node 0)
 	CComPtr<IBDA_SignalStatistics> m_pIBDA_SignalStatisticsDemod;		// Demod Node ÇÃ IBDA_SignalStatistics(Tuner Output Pin, Node 1)
-*/
+#endif
 	CComPtr<IBaseFilter> m_pTunerDevice;								// Tuner ÇÃ IBaseFilter
 	CComPtr<IBaseFilter> m_pCaptureDevice;								// Capture ÇÃ IBaseFilter
 	CRITICAL_SECTION m_CriticalSection;									// îrëºèàóùóp
