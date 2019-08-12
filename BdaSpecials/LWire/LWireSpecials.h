@@ -230,6 +230,7 @@ public:
 
 	const HRESULT InitializeHook(void);
 
+	const HRESULT ReadIniFile(const WCHAR* szIniFilePath);
 	const HRESULT PreLockChannel(TuningParam *pTuningParam);
 
 	virtual void Release(void);
@@ -255,6 +256,7 @@ private:
 	CComPtr<IBaseFilter> m_pTunerDevice;								// Tuner ‚Ì IBaseFilter
 	CComPtr<IBaseFilter> m_pCaptureDevice;								// Capture ‚Ì IBaseFilter
 	CRITICAL_SECTION m_CriticalSection;									// ”r‘¼ˆ——p
+	BOOL m_bBugT230C_ISDBC;												// T230C‚ÌDriver‚ÅISDB-C‚ÌSymbolRate‚ªSet‚³‚ê‚È‚¢BUG‘Îô‚ğs‚¤
 
 private:
 

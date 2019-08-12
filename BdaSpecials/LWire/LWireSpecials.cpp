@@ -121,7 +121,8 @@ __declspec(dllexport) HRESULT CheckAndInitTuner(IBaseFilter* /*pTunerDevice*/, c
 
 CLWireSpecials::CLWireSpecials(CComPtr<IBaseFilter> pTunerDevice, CComPtr<IBaseFilter> pCaptureDevice)
 	: m_pTunerDevice(pTunerDevice),
-	  m_pCaptureDevice(pCaptureDevice)
+	  m_pCaptureDevice(pCaptureDevice),
+	  m_bBugT230C_ISDBC(FALSE)
 {
 	::InitializeCriticalSection(&m_CriticalSection);
 
@@ -322,6 +323,17 @@ const HRESULT CLWireSpecials::InitializeHook(void)
 	return S_OK;
 }
 
+const HRESULT CLWireSpecials::ReadIniFile(const WCHAR* szIniFilePath)
+{
+	CIniFileAccess IniFileAccess(szIniFilePath);
+	IniFileAccess.SetSectionName(L"LWire");
+
+	// T230C‚ÌDriver‚ÅISDB-C‚ÌSymbolRate‚ªSet‚³‚ê‚È‚¢BUG‘Îô‚ðs‚¤
+	m_bBugT230C_ISDBC = IniFileAccess.ReadKeyB(L"BugT230C_ISDBC", m_bBugT230C_ISDBC);
+
+	return S_OK;
+}
+
 const HRESULT CLWireSpecials::PreLockChannel(TuningParam* pTuningParam)
 {
 	static long sr_cache = -1;
@@ -334,47 +346,49 @@ const HRESULT CLWireSpecials::PreLockChannel(TuningParam* pTuningParam)
 
 	OutputDebug(L"PreLockChannel: Start.\n");
 
+	if (m_bBugT230C_ISDBC && pTuningParam->Modulation.Modulation >= BDA_MOD_16QAM && pTuningParam->Modulation.Modulation <= BDA_MOD_1024QAM) {
 #if 0
-	// Si2168 connect tuners i2c
-	{
-		i2c_cmd i2c = { I2C_ADDR_SI2168, 3, 0, { 0xc0, 0x0d, 0x01, }, {} };
-		hr = send_i2c(m_pControlCaptureFilter, &i2c);
-	}
-	// Si2157 ini
-	{
-		i2c_cmd i2c = { I2C_ADDR_SI2157, 3, 1, { 0xc0, 0x00, 0x0d, }, {} };
-		hr = send_i2c(m_pControlCaptureFilter, &i2c);
-	}
+		// Si2168 connect tuners i2c
+		{
+			i2c_cmd i2c = { I2C_ADDR_SI2168, 3, 0, { 0xc0, 0x0d, 0x01, }, {} };
+			hr = send_i2c(m_pControlCaptureFilter, &i2c);
+		}
+		// Si2157 ini
+		{
+			i2c_cmd i2c = { I2C_ADDR_SI2157, 3, 1, { 0xc0, 0x00, 0x0d, }, {} };
+			hr = send_i2c(m_pControlCaptureFilter, &i2c);
+		}
 #endif
-	// Si2168 Prop 0x1102
-	if (sr_cache != pTuningParam->Modulation.SymbolRate) {
-		i2c_cmd i2c = { I2C_ADDR_SI2168, 6, 4, { 0x14, 0x00, 0x02, 0x11, (BYTE)(pTuningParam->Modulation.SymbolRate & 0xff), (BYTE)((pTuningParam->Modulation.SymbolRate >> 8) & 0xff) }, {} };
-		hr = send_i2c(m_pControlCaptureFilter, &i2c);
-	}
+		// Si2168 Prop 0x1102
+		if (sr_cache != pTuningParam->Modulation.SymbolRate) {
+			i2c_cmd i2c = { I2C_ADDR_SI2168, 6, 4, { 0x14, 0x00, 0x02, 0x11, (BYTE)(pTuningParam->Modulation.SymbolRate & 0xff), (BYTE)((pTuningParam->Modulation.SymbolRate >> 8) & 0xff) }, {} };
+			hr = send_i2c(m_pControlCaptureFilter, &i2c);
+		}
 #if 0
-	// Si2168 Prop 0x011a
-	{
-		BYTE std;
-		BYTE bw;
+		// Si2168 Prop 0x011a
+		{
+			BYTE std;
+			BYTE bw;
 
-		i2c_cmd i2c = { I2C_ADDR_SI2168, 6, 4, { 0x14, 0x00, 0x0a, 0x10, 0x00, 0x02 }, {} };
-		BYTE std = SI2168_SIGNAL_STANDARD_DVBC;
-		BYTE bw = SI2168_BAND_WIDTH_6;
+			i2c_cmd i2c = { I2C_ADDR_SI2168, 6, 4, { 0x14, 0x00, 0x0a, 0x10, 0x00, 0x02 }, {} };
+			BYTE std = SI2168_SIGNAL_STANDARD_DVBC;
+			BYTE bw = SI2168_BAND_WIDTH_6;
 
-		i2c.WBuf[4] = std | bw;
-		hr = send_i2c(m_pControlCaptureFilter, &i2c);
-	}
-	// Si2168 restart
-	{
-		i2c_cmd i2c = { I2C_ADDR_SI2168, 1, 1, { 0x85, }, {} };
-		hr = send_i2c(m_pControlCaptureFilter, &i2c);
-	}
-	// Si2168 disconnect tuners i2c
-	{
-		i2c_cmd i2c = { I2C_ADDR_SI2168, 3, 0, { 0xc0, 0x0d, 0x00, }, {} };
-		hr = send_i2c(m_pControlCaptureFilter, &i2c);
-	}
+			i2c.WBuf[4] = std | bw;
+			hr = send_i2c(m_pControlCaptureFilter, &i2c);
+		}
+		// Si2168 restart
+		{
+			i2c_cmd i2c = { I2C_ADDR_SI2168, 1, 1, { 0x85, }, {} };
+			hr = send_i2c(m_pControlCaptureFilter, &i2c);
+		}
+		// Si2168 disconnect tuners i2c
+		{
+			i2c_cmd i2c = { I2C_ADDR_SI2168, 3, 0, { 0xc0, 0x0d, 0x00, }, {} };
+			hr = send_i2c(m_pControlCaptureFilter, &i2c);
+		}
 #endif
+	}
 
 	OutputDebug(L"PreLockChannel: Complete.\n");
 
