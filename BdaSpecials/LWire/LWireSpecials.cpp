@@ -363,6 +363,7 @@ const HRESULT CLWireSpecials::PreLockChannel(TuningParam* pTuningParam)
 		if (sr_cache != pTuningParam->Modulation.SymbolRate) {
 			i2c_cmd i2c = { I2C_ADDR_SI2168, 6, 4, { 0x14, 0x00, 0x02, 0x11, (BYTE)(pTuningParam->Modulation.SymbolRate & 0xff), (BYTE)((pTuningParam->Modulation.SymbolRate >> 8) & 0xff) }, {} };
 			hr = send_i2c(m_pControlCaptureFilter, &i2c);
+			sr_cache = pTuningParam->Modulation.SymbolRate;
 		}
 #if 0
 		// Si2168 Prop 0x011a
