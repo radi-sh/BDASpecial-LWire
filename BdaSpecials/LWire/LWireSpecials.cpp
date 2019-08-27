@@ -122,7 +122,8 @@ __declspec(dllexport) HRESULT CheckAndInitTuner(IBaseFilter* /*pTunerDevice*/, c
 CLWireSpecials::CLWireSpecials(CComPtr<IBaseFilter> pTunerDevice, CComPtr<IBaseFilter> pCaptureDevice)
 	: m_pTunerDevice(pTunerDevice),
 	  m_pCaptureDevice(pCaptureDevice),
-	  m_bBugT230C_ISDBC(FALSE)
+	  m_bBugT230C_ISDBC(FALSE),
+	  m_nLastSymbolRate(-1)
 {
 	::InitializeCriticalSection(&m_CriticalSection);
 
@@ -336,8 +337,6 @@ const HRESULT CLWireSpecials::ReadIniFile(const WCHAR* szIniFilePath)
 
 const HRESULT CLWireSpecials::PreLockChannel(TuningParam* pTuningParam)
 {
-	static long sr_cache = -1;
-
 	if (m_pControlCaptureFilter == NULL) {
 		return E_POINTER;
 	}
@@ -360,10 +359,10 @@ const HRESULT CLWireSpecials::PreLockChannel(TuningParam* pTuningParam)
 		}
 #endif
 		// Si2168 Prop 0x1102
-		if (sr_cache != pTuningParam->Modulation.SymbolRate) {
+		if (m_nLastSymbolRate != pTuningParam->Modulation.SymbolRate) {
 			i2c_cmd i2c = { I2C_ADDR_SI2168, 6, 4, { 0x14, 0x00, 0x02, 0x11, (BYTE)(pTuningParam->Modulation.SymbolRate & 0xff), (BYTE)((pTuningParam->Modulation.SymbolRate >> 8) & 0xff) }, {} };
 			hr = send_i2c(m_pControlCaptureFilter, &i2c);
-			sr_cache = pTuningParam->Modulation.SymbolRate;
+			m_nLastSymbolRate = pTuningParam->Modulation.SymbolRate;
 		}
 #if 0
 		// Si2168 Prop 0x011a

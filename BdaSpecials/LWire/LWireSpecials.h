@@ -257,6 +257,7 @@ private:
 	CComPtr<IBaseFilter> m_pCaptureDevice;								// Capture の IBaseFilter
 	CRITICAL_SECTION m_CriticalSection;									// 排他処理用
 	BOOL m_bBugT230C_ISDBC;												// T230CのDriverでISDB-CのSymbolRateがSetされないBUG対策を行う
+	long m_nLastSymbolRate;												// 現在のシンボルレート
 
 private:
 
